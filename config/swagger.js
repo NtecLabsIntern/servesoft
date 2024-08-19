@@ -19,7 +19,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./routes/*.js'], // Path to the API files
+  apis: ['./routes/adminSetup.js','./routes/items.js'], // Path to the API files
 };
 
 // Initialize swagger-jsdoc

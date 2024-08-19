@@ -12,7 +12,7 @@ const User = require('../models/User');
 
 /**
  * @swagger
- * /setup-admin:
+ * /adminSetup:
  *   get:
  *     summary: Setup the master admin user
  *     tags: [Admin]
@@ -24,7 +24,7 @@ const User = require('../models/User');
  *       500:
  *         description: An error occurred while setting up the admin user
  */
-router.get('/setup-admin', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const userCount = await User.count();
 
@@ -49,4 +49,4 @@ router.get('/setup-admin', async (req, res) => {
 module.exports = router;
 
 
-module.exports = router;
+
