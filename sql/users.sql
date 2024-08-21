@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 13, 2024 at 06:05 AM
+-- Generation Time: Aug 21, 2024 at 04:30 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -31,16 +31,23 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `role_id` int(11) DEFAULT NULL,
   `DOB` date DEFAULT NULL,
   `gender` enum('male','female','other','prefer_not_to_say') DEFAULT 'prefer_not_to_say',
   `tel` varchar(15) NOT NULL,
   `email` varchar(255) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `language_preference` varchar(50) DEFAULT 'English',
-  `role` enum('admin','waiter','chef','manager','other') DEFAULT 'other',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `password`, `role_id`, `DOB`, `gender`, `tel`, `email`, `address`, `language_preference`, `created_at`, `updated_at`) VALUES
+(4, 'admin', 'admin', NULL, NULL, 'prefer_not_to_say', '0000000000', 'admin@example.com', NULL, 'English', '2024-08-19 09:11:12', '2024-08-19 09:11:12');
 
 --
 -- Indexes for dumped tables
@@ -51,7 +58,8 @@ CREATE TABLE `users` (
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `fk_role_id` (`role_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -61,7 +69,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
