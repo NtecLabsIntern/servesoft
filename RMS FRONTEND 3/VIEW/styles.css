@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+}
+
+.sidebar-header img {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.nav-link {
+    padding: 10px 15px;
+    display: block;
+}
+
+.content {
+    background-color: #1164b7;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+}
+
+.card-text {
+    color: #3c2ba5;
+}
+
+.btn {
+    border-radius: 25px;
+}
+
+.filters {
+    background-color: #3c17e4;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
