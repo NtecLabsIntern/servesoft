@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 21, 2024 at 04:30 PM
+-- Generation Time: Aug 22, 2024 at 03:01 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -31,7 +31,6 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role_id` int(11) DEFAULT NULL,
   `DOB` date DEFAULT NULL,
   `gender` enum('male','female','other','prefer_not_to_say') DEFAULT 'prefer_not_to_say',
   `tel` varchar(15) NOT NULL,
@@ -46,8 +45,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `password`, `role_id`, `DOB`, `gender`, `tel`, `email`, `address`, `language_preference`, `created_at`, `updated_at`) VALUES
-(4, 'admin', 'admin', NULL, NULL, 'prefer_not_to_say', '0000000000', 'admin@example.com', NULL, 'English', '2024-08-19 09:11:12', '2024-08-19 09:11:12');
+INSERT INTO `users` (`id`, `name`, `password`, `DOB`, `gender`, `tel`, `email`, `address`, `language_preference`, `created_at`, `updated_at`) VALUES
+(4, 'admin', 'admin', NULL, 'prefer_not_to_say', '0000000000', 'admin@example.com', NULL, 'English', '2024-08-19 09:11:12', '2024-08-19 09:11:12');
 
 --
 -- Indexes for dumped tables
@@ -58,8 +57,7 @@ INSERT INTO `users` (`id`, `name`, `password`, `role_id`, `DOB`, `gender`, `tel`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `fk_role_id` (`role_id`);
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -70,16 +68,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `fk_role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
