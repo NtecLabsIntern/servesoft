@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 22, 2024 at 03:01 PM
+-- Generation Time: Aug 27, 2024 at 06:57 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -38,15 +38,16 @@ CREATE TABLE `users` (
   `address` varchar(255) DEFAULT NULL,
   `language_preference` varchar(50) DEFAULT 'English',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `role_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `password`, `DOB`, `gender`, `tel`, `email`, `address`, `language_preference`, `created_at`, `updated_at`) VALUES
-(4, 'admin', 'admin', NULL, 'prefer_not_to_say', '0000000000', 'admin@example.com', NULL, 'English', '2024-08-19 09:11:12', '2024-08-19 09:11:12');
+INSERT INTO `users` (`id`, `name`, `password`, `DOB`, `gender`, `tel`, `email`, `address`, `language_preference`, `created_at`, `updated_at`, `role_id`) VALUES
+(4, 'admin', 'admin', NULL, 'prefer_not_to_say', '0000000000', 'admin@example.com', NULL, 'English', '2024-08-19 09:11:12', '2024-08-19 09:11:12', NULL);
 
 --
 -- Indexes for dumped tables
@@ -57,7 +58,8 @@ INSERT INTO `users` (`id`, `name`, `password`, `DOB`, `gender`, `tel`, `email`, 
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `fk_users_role` (`role_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -68,6 +70,16 @@ ALTER TABLE `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_users_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
