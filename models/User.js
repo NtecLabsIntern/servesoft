@@ -18,6 +18,7 @@
 // models/User.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Role = require('./roles'); // Assuming you have created the Role model
 
 const User = sequelize.define('users', {
   id: {
@@ -57,9 +58,13 @@ const User = sequelize.define('users', {
     type: DataTypes.STRING(50),
     defaultValue: 'English',
   },
-  role: {
-    type: DataTypes.ENUM('admin', 'waiter', 'chef', 'manager', 'other'),
-    defaultValue: 'other',
+  role_id: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Role, // Reference the Role model
+      key: 'id',
+    },
+    allowNull: false,
   },
   created_at: {
     type: DataTypes.DATE,
@@ -71,9 +76,12 @@ const User = sequelize.define('users', {
     onUpdate: DataTypes.NOW,
   },
 }, {
-  tableName: 'users', // Ensure the table name matches your database
-  timestamps: false,  // Disable Sequelize's automatic timestamp fields
+  tableName: 'users',
+  timestamps: false, // Disable Sequelize's automatic timestamp fields
 });
 
+// Define the relationship between User and Role
+User.belongsTo(Role, { foreignKey: 'role_id', as: 'role' });
 
 module.exports = User;
+
