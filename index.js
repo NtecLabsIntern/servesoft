@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const sequelize = require('./config/database');
 const adminRoutes = require('./routes/adminSetup');
 const itemsRouter = require('./routes/items'); 
+const rolesRouter = require('./routes/roles'); 
+const usersRouter = require('./routes/users'); 
 const swaggerDocs = require('./config/swagger');
 
 const app = express();
@@ -14,6 +16,8 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use('/api/adminSetup', adminRoutes);
 app.use('/api/items', itemsRouter); // Prefix all routes with /api
+app.use('/api/roles', rolesRouter);
+app.use('/api/users', usersRouter);
 
 
 
