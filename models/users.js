@@ -1,9 +1,7 @@
-// // models/User.js contains the database mode
-
-// models/User.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Role = require('./roles'); // Assuming you have created the Role model
+const Role = require('./roles'); // Ensure this path is correct
+const UserRoleLink = require('./userRoleLink'); // Ensure this path is correct
 
 const User = sequelize.define('users', {
   id: {
@@ -43,14 +41,6 @@ const User = sequelize.define('users', {
     type: DataTypes.STRING(50),
     defaultValue: 'English',
   },
-  role_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Role, // Reference the Role model
-      key: 'id',
-    },
-    allowNull: false,
-  },
   created_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
@@ -65,8 +55,11 @@ const User = sequelize.define('users', {
   timestamps: false, // Disable Sequelize's automatic timestamp fields
 });
 
-// Define the relationship between User and Role
-User.belongsTo(Role, { foreignKey: 'role_id', as: 'role' });
+// Define many-to-many relationship with Role through UserRoleLink
+User.belongsToMany(Role, {
+  through: UserRoleLink,
+  foreignKey: 'user_id',
+  otherKey: 'role_id',
+});
 
 module.exports = User;
-

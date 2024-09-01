@@ -20,7 +20,7 @@ const SALT_ROUNDS = 10;
  *         - email
  *         - address
  *         - language_preference
- *         - role_id
+ *        
  * 
  *       properties:
  *         id:
@@ -52,9 +52,6 @@ const SALT_ROUNDS = 10;
  *         language_preference:
  *           type: string
  *           description: The user's language preference
- *         role_id:
- *           type: integer
- *           description: The role ID associated with the user
  *       example:
  *         name: John Doe
  *         password: password123
@@ -64,7 +61,6 @@ const SALT_ROUNDS = 10;
  *         email: johndoe@example.com
  *         address: 123 Main St, Springfield
  *         language_preference: English
- *         role_id: 1
  */
 
 /**
@@ -160,19 +156,19 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-//read one user
+// Find user by name (change findByPk to findOne with where condition)
 router.get('/:name', async (req, res) => {
-  try {
-    const user = await User.findOne({ where: { name: req.params.name } });
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    try {
+      const user = await User.findOne({ where: { name: req.params.name } });
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+  });
 
 /**
  * @swagger
@@ -205,11 +201,10 @@ router.get('/:name', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-// Update user details with hashed password if provided
+// Update user by name
 router.put('/:name', async (req, res) => {
     try {
-    const user = await User.findOne({ where: { name: req.params.name } });
-  
+      const user = await User.findOne({ where: { name: req.params.name } });
       if (user) {
         let updatedData = req.body;
   
@@ -238,7 +233,7 @@ router.put('/:name', async (req, res) => {
  *       - in: path
  *         name: name
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
  *         description: The user name
  *     responses:
@@ -249,19 +244,19 @@ router.put('/:name', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-//delete a user
+// Delete user by name
 router.delete('/:name', async (req, res) => {
-  try {
-    const user = await User.findOne({ where: { name: req.params.name } });
-    if (user) {
-      await user.destroy();
-      res.status(200).json({ message: 'User deleted successfully' });
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    try {
+      const user = await User.findOne({ where: { name: req.params.name } });
+      if (user) {
+        await user.destroy();
+        res.status(200).json({ message: 'User deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+  });
 
 module.exports = router;

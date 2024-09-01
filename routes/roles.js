@@ -123,7 +123,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error fetching role.' });
   }
 });
-// UPDATE a role by ID
+
 /**
  * @swagger
  * /roles/{id}:
@@ -174,7 +174,7 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error updating role.' });
   }
 });
-// DELETE a role by ID
+
 /**
  * @swagger
  * /roles/{id}:
