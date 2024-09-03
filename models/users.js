@@ -1,7 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const Role = require('./roles'); // Ensure this path is correct
-const UserRoleLink = require('./userRoleLink'); // Ensure this path is correct
+const sequelize = require('../config/database'); // Adjust the path to your database configuration
 
 const User = sequelize.define('users', {
   id: {
@@ -52,14 +50,7 @@ const User = sequelize.define('users', {
   },
 }, {
   tableName: 'users',
-  timestamps: false, // Disable Sequelize's automatic timestamp fields
-});
-
-// Define many-to-many relationship with Role through UserRoleLink
-User.belongsToMany(Role, {
-  through: UserRoleLink,
-  foreignKey: 'user_id',
-  otherKey: 'role_id',
+  timestamps: false, // Since we are manually handling timestamps in the schema
 });
 
 module.exports = User;
