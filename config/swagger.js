@@ -12,6 +12,20 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for ServeSoft application',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT', // Optional, but useful for documentation
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     servers: [
       {
         url: 'http://localhost:3000/api',
@@ -19,7 +33,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./routes/adminSetup.js','./routes/items.js'], // Path to the API files
+  apis: ['./routes/adminSetup.js','./routes/items.js','./routes/roles.js','./routes/users.js','./routes/userRoleLink.js'], // Path to the API files
 };
 
 // Initialize swagger-jsdoc
