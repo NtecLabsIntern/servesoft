@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
+const authorize = require('../middlewares/authorizationMiddleware');
+const jwt = require('jsonwebtoken');
+
+
 
 const SALT_ROUNDS = 10;
 
@@ -86,7 +90,7 @@ const SALT_ROUNDS = 10;
  *         description: Some server error
  */
 //user creation
-router.post('/', async (req, res) => {
+router.post('/', authorize(['admin']), async (req, res) => {
     try {
       // Hash the password
       const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);

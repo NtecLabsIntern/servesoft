@@ -48,9 +48,22 @@ const User = sequelize.define('users', {
     defaultValue: DataTypes.NOW,
     onUpdate: DataTypes.NOW,
   },
-}, {
+},  {
   tableName: 'users',
-  timestamps: false, // Since we are manually handling timestamps in the schema
+  timestamps: false,
+  hooks: {
+    beforeSave: async (user) => {
+      if (user.changed('password')) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+      }
+    },
+  },
 });
+
+// Instance method for password comparison
+User.prototype.comparePassword = function (password) {
+  return bcrypt.compare(password, this.password);
+};
 
 module.exports = User;
