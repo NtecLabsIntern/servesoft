@@ -9,9 +9,7 @@ const rolesRouter = require('./routes/roles');
 const usersRouter = require('./routes/users'); 
 const userRoleLinkRouter = require('./routes/userRoleLink'); 
 const swaggerDocs = require('./config/swagger');
-const authRoutes = require('./routes/auth');
-const protectedRoutes = require('./routes/protected');
-const { authenticateToken } = require('./middlewares/AuthMiddleware');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,8 +21,7 @@ app.use('/api/items', itemsRouter); // Prefix all routes with /api
 app.use('/api/roles', rolesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/users', userRoleLinkRouter);
-app.use('/api/auth', authRoutes);
-app.use('/api/protected', authenticateToken, protectedRoutes);
+
 
 
 
