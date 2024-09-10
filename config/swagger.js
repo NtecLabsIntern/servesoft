@@ -1,5 +1,3 @@
-//config/swagger.js
-
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -12,12 +10,18 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for ServeSoft application',
     },
+    servers: [
+      {
+        url: 'http://localhost:3000/api',
+        description: 'Development server',
+      },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT', // Optional, but useful for documentation
+          bearerFormat: 'JWT',
         },
       },
     },
@@ -26,14 +30,8 @@ const swaggerOptions = {
         bearerAuth: [],
       },
     ],
-    servers: [
-      {
-        url: 'http://localhost:3000/api',
-        description: 'Development server',
-      },
-    ],
   },
-  apis: ['./routes/adminSetup.js','./routes/items.js','./routes/roles.js','./routes/users.js','./routes/userRoleLink.js'], // Path to the API files
+  apis: ['./routes/adminSetup.js', './routes/items.js', './routes/roles.js', './routes/users.js', './routes/userRoleLink.js','./routes/auth.js'], // Path to the API files
 };
 
 // Initialize swagger-jsdoc
