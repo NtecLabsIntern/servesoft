@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
-const jwt = require('jsonwebtoken');
-
-
+const { authenticateToken } = require('../middlewares/authenticateToken');
+const { authorizeRoles } = require('../middlewares/authorisation');
 
 const SALT_ROUNDS = 10;
 
@@ -23,8 +22,6 @@ const SALT_ROUNDS = 10;
  *         - email
  *         - address
  *         - language_preference
- *        
- * 
  *       properties:
  *         id:
  *           type: integer
@@ -70,8 +67,10 @@ const SALT_ROUNDS = 10;
  * @swagger
  * /users:
  *   post:
- *     summary: Create a new user
+ *     summary: Create a new user (Admin only)
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -88,33 +87,33 @@ const SALT_ROUNDS = 10;
  *       500:
  *         description: Some server error
  */
-//user creation
-router.post('/', async (req, res) => {
-    try {
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
-  
-      // Create the new user with hashed password
-      const user = await User.create({
-        ...req.body,
-        password: hashedPassword,
-      });
-  
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+// Create new user (admin only)
+router.post('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
+
+    const user = await User.create({
+      ...req.body,
+      password: hashedPassword,
+    });
+
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 /**
  * @swagger
  * /users:
  *   get:
- *     summary: Returns the list of all the users
+ *     summary: Returns the list of all users (Admin only)
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: The list of the users
+ *         description: The list of users
  *         content:
  *           application/json:
  *             schema:
@@ -124,8 +123,8 @@ router.post('/', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-//read all users
-router.get('/', async (req, res) => {
+// Read all users (admin only)
+router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
   try {
     const users = await User.findAll();
     res.status(200).json(users);
@@ -138,8 +137,10 @@ router.get('/', async (req, res) => {
  * @swagger
  * /users/{name}:
  *   get:
- *     summary: Get the user by name
+ *     summary: Get user by name (Admin only)
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: name
@@ -149,7 +150,7 @@ router.get('/', async (req, res) => {
  *         description: The user name
  *     responses:
  *       200:
- *         description: The user description by Name
+ *         description: The user description by name
  *         content:
  *           application/json:
  *             schema:
@@ -159,26 +160,28 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-// Find user by name (change findByPk to findOne with where condition)
-router.get('/:name', async (req, res) => {
-    try {
-      const user = await User.findOne({ where: { name: req.params.name } });
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: 'User not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+// Find user by name (admin only)
+router.get('/:name', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { name: req.params.name } });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 /**
  * @swagger
  * /users/{name}:
  *   put:
- *     summary: Update the user by Name
+ *     summary: Update user by name (Admin only)
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: name
@@ -204,39 +207,42 @@ router.get('/:name', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-// Update user by name
-router.put('/:name', async (req, res) => {
-    try {
-      const user = await User.findOne({ where: { name: req.params.name } });
-      if (user) {
-        let updatedData = req.body;
-  
-        // If password is being updated, hash the new password
-        if (req.body.password) {
-          const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
-          updatedData.password = hashedPassword;
-        }
-  
-        await user.update(updatedData);
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: 'User not found' });
+// Update user by name (admin only)
+router.put('/:name', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { name: req.params.name } });
+    if (user) {
+      let updatedData = req.body;
+
+      // If password is being updated, hash the new password
+      if (req.body.password) {
+        const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
+        updatedData.password = hashedPassword;
       }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+
+      await user.update(updatedData);
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 /**
  * @swagger
  * /users/{name}:
  *   delete:
- *     summary: Remove the user by Name
+ *     summary: Remove the user by name (Admin only)
  *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: name
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The user name
  *     responses:
@@ -247,19 +253,19 @@ router.put('/:name', async (req, res) => {
  *       500:
  *         description: Some server error
  */
-// Delete user by name
-router.delete('/:name', async (req, res) => {
-    try {
-      const user = await User.findOne({ where: { name: req.params.name } });
-      if (user) {
-        await user.destroy();
-        res.status(200).json({ message: 'User deleted successfully' });
-      } else {
-        res.status(404).json({ message: 'User not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+// Delete user by name (admin only)
+router.delete('/:name', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { name: req.params.name } });
+    if (user) {
+      await user.destroy();
+      res.status(200).json({ message: 'User deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
-  });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

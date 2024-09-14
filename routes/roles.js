@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const authenticateToken = require('../middlewares/authenticateToken');
 const Role = require('../models/roles');
 
 // CREATE a new role
@@ -36,7 +37,7 @@ const Role = require('../models/roles');
  *       500:
  *         description: Error creating role
  */
-router.post('/', async (req, res) => {
+router.get('/',  async (req, res) => {
   try {
     const { role_name } = req.body;
     const newRole = await Role.create({ role_name });
