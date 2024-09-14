@@ -1,3 +1,5 @@
+// routes/roles.js
+
 const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../middlewares/authenticateToken');
@@ -17,8 +19,6 @@ const Role = require('../models/roles');
  *   post:
  *     summary: Create a new role
  *     tags: [Roles]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -37,7 +37,7 @@ const Role = require('../models/roles');
  *       500:
  *         description: Error creating role
  */
-router.post('/', authenticateToken, async (req, res) => {
+router.get('/',  async (req, res) => {
   try {
     const { role_name } = req.body;
     const newRole = await Role.create({ role_name });
@@ -47,7 +47,6 @@ router.post('/', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error creating role.' });
   }
 });
-
 // READ all roles
 /**
  * @swagger
@@ -55,8 +54,6 @@ router.post('/', authenticateToken, async (req, res) => {
  *   get:
  *     summary: Get all roles
  *     tags: [Roles]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of all roles
@@ -74,7 +71,7 @@ router.post('/', authenticateToken, async (req, res) => {
  *       500:
  *         description: Error fetching roles
  */
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const roles = await Role.findAll();
     res.status(200).json(roles);
@@ -83,7 +80,6 @@ router.get('/', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error fetching roles.' });
   }
 });
-
 // READ a specific role by ID
 /**
  * @swagger
@@ -91,8 +87,6 @@ router.get('/', authenticateToken, async (req, res) => {
  *   get:
  *     summary: Get a role by ID
  *     tags: [Roles]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -117,7 +111,7 @@ router.get('/', authenticateToken, async (req, res) => {
  *       500:
  *         description: Error fetching role
  */
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const role = await Role.findByPk(req.params.id);
     if (role) {
@@ -137,8 +131,6 @@ router.get('/:id', authenticateToken, async (req, res) => {
  *   put:
  *     summary: Update a role by ID
  *     tags: [Roles]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -166,7 +158,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
  *       500:
  *         description: Error updating role
  */
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { role_name } = req.body;
     const role = await Role.findByPk(req.params.id);
@@ -190,8 +182,6 @@ router.put('/:id', authenticateToken, async (req, res) => {
  *   delete:
  *     summary: Delete a role by ID
  *     tags: [Roles]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -207,7 +197,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
  *       500:
  *         description: Error deleting role
  */
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const role = await Role.findByPk(req.params.id);
 
