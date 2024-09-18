@@ -8,6 +8,7 @@ const itemsRouter = require('./routes/items');
 const rolesRouter = require('./routes/roles'); 
 const usersRouter = require('./routes/users'); 
 const userRoleLinkRouter = require('./routes/userRoleLink'); 
+const authenticationRouter = require('./routes/auth');
 const swaggerDocs = require('./config/swagger');
 
 
@@ -21,6 +22,7 @@ app.use('/api/items', itemsRouter); // Prefix all routes with /api
 app.use('/api/roles', rolesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/users', userRoleLinkRouter);
+app.use('/api/auth', authenticationRouter);
 
 
 
