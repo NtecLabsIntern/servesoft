@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../middlewares/authenticateToken');
+const authorizeRoles = require('../middlewares/authorisation');
 const Role = require('../models/roles');
 
 // CREATE a new role
@@ -37,7 +38,8 @@ const Role = require('../models/roles');
  *       500:
  *         description: Error creating role
  */
-router.get('/',  async (req, res) => {
+// CREATE a new role
+router.post('/', authenticateToken,authorizeRoles(['admin']), async (req, res) => {
   try {
     const { role_name } = req.body;
     const newRole = await Role.create({ role_name });
@@ -71,7 +73,8 @@ router.get('/',  async (req, res) => {
  *       500:
  *         description: Error fetching roles
  */
-router.get('/', async (req, res) => {
+// READ all roles
+router.get('/', authenticateToken,authorizeRoles(['admin']), async (req, res) => {
   try {
     const roles = await Role.findAll();
     res.status(200).json(roles);
@@ -111,7 +114,8 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Error fetching role
  */
-router.get('/:id', async (req, res) => {
+// READ a specific role by ID
+router.get('/:id', authenticateToken,authorizeRoles(['admin']), async (req, res) => {
   try {
     const role = await Role.findByPk(req.params.id);
     if (role) {
@@ -158,7 +162,9 @@ router.get('/:id', async (req, res) => {
  *       500:
  *         description: Error updating role
  */
-router.put('/:id', async (req, res) => {
+
+// Update a role by ID
+router.put('/:id', authenticateToken,authorizeRoles(['admin']), async (req, res) => {
   try {
     const { role_name } = req.body;
     const role = await Role.findByPk(req.params.id);
@@ -197,7 +203,8 @@ router.put('/:id', async (req, res) => {
  *       500:
  *         description: Error deleting role
  */
-router.delete('/:id', async (req, res) => {
+// Delete a role by ID
+router.delete('/:id', authenticateToken,authorizeRoles(['admin']), async (req, res) => {
   try {
     const role = await Role.findByPk(req.params.id);
 
@@ -212,5 +219,4 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Error deleting role.' });
   }
 });
-
 module.exports = router;

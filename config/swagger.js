@@ -31,7 +31,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./routes/adminSetup.js', './routes/items.js', './routes/roles.js', './routes/users.js', './routes/userRoleLink.js','./routes/auth.js'], // Path to the API files
+  apis: ['./routes/adminSetup.js', './routes/items.js', './routes/roles.js', './routes/users.js', './routes/userRoleLink.js','./routes/login.js'], // Path to the API files
 };
 
 // Initialize swagger-jsdoc

@@ -8,7 +8,7 @@ const itemsRouter = require('./routes/items');
 const rolesRouter = require('./routes/roles'); 
 const usersRouter = require('./routes/users'); 
 const userRoleLinkRouter = require('./routes/userRoleLink'); 
-const authenticationRouter = require('./routes/auth');
+const authenticationRouter = require('./routes/login');
 const swaggerDocs = require('./config/swagger');
 
 

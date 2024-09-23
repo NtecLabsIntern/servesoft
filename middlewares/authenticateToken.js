@@ -1,30 +1,24 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET; // Use environment variables for security
 
-// Authentication Middleware
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
+const authenticateToken = (req, res, next) => {
+  // Get the token from the Authorization header
+  const token = req.headers['authorization']?.split(' ')[1];
   
-  // Check if authorization header is provided
-  if (!authHeader) {
-    return res.status(401).json({ message: 'Access denied. No authorization header provided.' });
-  }
-
-  // Check if authorization is in Bearer format
-  const token = authHeader.split(' ')[1];
+  // If there's no token, return a 401 Unauthorized response
   if (!token) {
-    return res.status(401).json({ message: 'Access denied. No token provided.' });
+    return res.status(401).json({ message: 'Access forbidden: No token provided.' });
   }
 
-  // Verify the token
-  jwt.verify(token, JWT_SECRET, (err, user) => {
+  // Verify the token using your secret key
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
-      return res.status(403).json({ message: 'Invalid token.' });
+      return res.status(403).json({ message: 'Access forbidden: Invalid token.' });
     }
-    // Attach the user information to request object for further use
-    req.user = user;
-    next(); // Call next middleware/route handler
-  });
-}
 
-module.exports = { authenticateToken };
+    // Attach the user information to the request object for later use
+    req.user = user; 
+    next(); // Move to the next middleware or route handler
+  });
+};
+
+module.exports = authenticateToken;

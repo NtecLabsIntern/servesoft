@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
-const { authenticateToken } = require('../middlewares/authenticateToken');
-const { authorizeRoles } = require('../middlewares/authorisation');
+const authenticateToken = require('../middlewares/authenticateToken');
+const authorizeAdmin = require('../middlewares/authorisation');
 
 const SALT_ROUNDS = 10;
 
@@ -69,8 +69,6 @@ const SALT_ROUNDS = 10;
  *   post:
  *     summary: Create a new user (Admin only)
  *     tags: [User]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -88,7 +86,7 @@ const SALT_ROUNDS = 10;
  *         description: Some server error
  */
 // Create new user (admin only)
-router.post('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.post('/',authenticateToken,authorizeAdmin ,async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
 
@@ -109,8 +107,6 @@ router.post('/', authenticateToken, authorizeRoles('admin'), async (req, res) =>
  *   get:
  *     summary: Returns the list of all users (Admin only)
  *     tags: [User]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: The list of users
@@ -124,7 +120,7 @@ router.post('/', authenticateToken, authorizeRoles('admin'), async (req, res) =>
  *         description: Some server error
  */
 // Read all users (admin only)
-router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.post('/',authenticateToken,authorizeAdmin ,async (req, res) => {
   try {
     const users = await User.findAll();
     res.status(200).json(users);
@@ -139,8 +135,6 @@ router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => 
  *   get:
  *     summary: Get user by name (Admin only)
  *     tags: [User]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: name
@@ -161,7 +155,7 @@ router.get('/', authenticateToken, authorizeRoles('admin'), async (req, res) => 
  *         description: Some server error
  */
 // Find user by name (admin only)
-router.get('/:name', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.post('/',authenticateToken,authorizeAdmin ,async (req, res) => {
   try {
     const user = await User.findOne({ where: { name: req.params.name } });
     if (user) {
@@ -180,8 +174,6 @@ router.get('/:name', authenticateToken, authorizeRoles('admin'), async (req, res
  *   put:
  *     summary: Update user by name (Admin only)
  *     tags: [User]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: name
@@ -208,7 +200,7 @@ router.get('/:name', authenticateToken, authorizeRoles('admin'), async (req, res
  *         description: Some server error
  */
 // Update user by name (admin only)
-router.put('/:name', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.post('/',authenticateToken,authorizeAdmin ,async (req, res) => {
   try {
     const user = await User.findOne({ where: { name: req.params.name } });
     if (user) {
@@ -236,8 +228,6 @@ router.put('/:name', authenticateToken, authorizeRoles('admin'), async (req, res
  *   delete:
  *     summary: Remove the user by name (Admin only)
  *     tags: [User]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: name
@@ -254,7 +244,7 @@ router.put('/:name', authenticateToken, authorizeRoles('admin'), async (req, res
  *         description: Some server error
  */
 // Delete user by name (admin only)
-router.delete('/:name', authenticateToken, authorizeRoles('admin'), async (req, res) => {
+router.post('/',authenticateToken,authorizeAdmin ,async (req, res) => {
   try {
     const user = await User.findOne({ where: { name: req.params.name } });
     if (user) {
